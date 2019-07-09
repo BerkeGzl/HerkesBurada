@@ -1,0 +1,9 @@
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\bin\Debug\Project.TOOLS.dll
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\bin\Debug\Project.TOOLS.pdb
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\obj\Debug\Project.TOOLS.csprojAssemblyReference.cache
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\obj\Debug\Project.TOOLS.csproj.CoreCompileInputs.cache
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\obj\Debug\Project.TOOLS.dll
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\obj\Debug\Project.TOOLS.pdb
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\bin\Debug\Project.MODEL.dll
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\bin\Debug\Project.MODEL.pdb
+C:\Users\Berke\source\repos\ProjectNTier\Project.TOOLS\obj\Debug\Project.TOOLS.csproj.CopyComplete

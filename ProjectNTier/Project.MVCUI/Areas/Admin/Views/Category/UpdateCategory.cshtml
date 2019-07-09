@@ -1,0 +1,19 @@
+﻿@model Category
+@{
+    ViewBag.Title = "UpdateCategory";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>UpdateCategory</h2>
+
+
+@using (Html.BeginForm("UpdateCategory", "Category", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.ID)
+    <div>Kategori Adı</div>
+    <div>@Html.TextBoxFor(x => x.CategoryName, new { @class = "form-control" })</div>
+    <div>Kategori Açıklaması</div>
+    <div>@Html.TextAreaFor(x => x.Description, new { @class = "form-control" })</div>
+    <button class="btn btn-success">Güncelle</button>
+}
+

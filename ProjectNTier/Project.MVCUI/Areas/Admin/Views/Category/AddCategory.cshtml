@@ -1,0 +1,15 @@
+﻿@model Category
+@{
+    ViewBag.Title = "AddCategory";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<title>Kategori Ekleme</title>
+@using (Html.BeginForm("AddCategory", "Category", FormMethod.Post))
+{
+    <div>Kategori Adı</div>
+    <div>@Html.TextBoxFor(x => x.CategoryName, new { @class = "form-control" })</div>
+    <div>Kategori Açıklaması</div>
+    <div>@Html.TextAreaFor(x => x.Description, new { @class = "form-control" })</div>
+    <button class="btn btn-success">Ekle</button>
+}

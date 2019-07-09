@@ -1,0 +1,153 @@
+﻿@model Tuple<Product, List<Category>, List<Product>>
+@{
+    ViewBag.Title = "ProductDetails";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+
+@section Kategoriler{
+    @foreach (Category item in Model.Item2)
+    {
+        <li>@Html.ActionLink(item.CategoryName, "SelectByCategory", "Member", new { id = item.ID }, new { @class = "icon-angle-right" })</li>
+    }
+}
+
+<script> 
+    $(document).ready(function(){
+            var x = document.getElementById("visibleDiv");
+            var y = document.getElementById("visibleDiv2");
+            if (x.style.display === "none" && y.style.display === "none") {
+                x.style.display = "block";
+                y.style.display = "block";
+            } else {
+                x.style.display = "none";
+                y.style.display = "none";
+            }
+    });      
+</script>
+
+<!-- page start-->
+<div class="row">
+    <div class="col-md-9" >
+
+        <section class="panel">
+            <div class="panel-body">
+                <div class="col-md-6">
+                    <div class="pro-img-details">
+                        <img src="@Model.Item1.ImagePath" alt="" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="pro-d-title">
+                        @Html.ActionLink(Model.Item1.ProductName, "ProductDetail", new { category = Url.FriendlyURLTitle(Model.Item1.Category.CategoryName), Title = Url.FriendlyURLTitle(Model.Item1.ProductName), id = Model.Item1.ID }, new { @class = "pro-title" })
+                    </h4>
+                    <p>
+                        @Model.Item1.Description
+                    </p>
+                    <div class="product_meta">
+                        <span class="posted_in">
+                            <strong>Kategorisi:</strong>
+                            @Html.ActionLink(Model.Item1.Category.CategoryName, "SelectByCategory", new { id = Model.Item1.CategoryID }, new { @class = "" })
+                        </span>
+                    </div>
+                    <div class="m-bot15"> <strong>Fiyat : </strong> <span class="pro-price"> $@Model.Item1.UnitPrice</span></div>
+                    <div class="m-bot15"> <strong>Stok Miktarı : </strong> <span class="pro-price"> @Model.Item1.UnitsInStock</span></div>
+
+                    <p>
+                        @if (Session["admin"] == null)
+                        {
+                            <div class="form-group">
+                                <label>Miktar</label>
+                                <input type="quantiy" placeholder="1" class="form-control quantity">
+                            </div>
+                            <a href="@Url.Action("AddToCart", new { id = Model.Item1.ID})" class="btn btn-round btn-danger"> <i class="icon-shopping-cart"></i> Sepete Ekle</a>
+                        }
+
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <header class="panel-heading tab-bg-dark-navy-blue">
+                <ul class="nav nav-tabs ">
+                    <li class="active">
+                        <a data-toggle="tab" href="#description">
+                            Açıklama
+                        </a>
+                    </li>
+                    @*<li>
+                            <a data-toggle="tab" href="#reviews">
+                                Reviews
+                            </a>
+                        </li>*@
+
+                </ul>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content tasi-tab">
+                    <div id="description" class="tab-pane active">
+                        <h4 class="pro-d-head">Ürün Açıklaması</h4>
+                        <p> @Model.Item1.Description </p>
+                    </div>
+                    <div id="reviews" class="tab-pane">
+                        <article class="media">
+                            <a class="pull-left thumb p-thumb">
+                                <img src="img/avatar-mini.jpg">
+                            </a>
+                            <div class="media-body">
+                                <a href="#" class="cmt-head">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a>
+                                <p> <i class="icon-time"></i> 1 hours ago</p>
+                            </div>
+                        </article>
+                        <article class="media">
+                            <a class="pull-left thumb p-thumb">
+                                <img src="img/avatar-mini2.jpg">
+                            </a>
+                            <div class="media-body">
+                                <a href="#" class="cmt-head">Nulla vel metus scelerisque ante sollicitudin commodo</a>
+                                <p> <i class="icon-time"></i> 23 mins ago</p>
+                            </div>
+                        </article>
+                        <article class="media">
+                            <a class="pull-left thumb p-thumb">
+                                <img src="img/avatar-mini3.jpg">
+                            </a>
+                            <div class="media-body">
+                                <a href="#" class="cmt-head">Donec lacinia congue felis in faucibus. </a>
+                                <p> <i class="icon-time"></i> 15 mins ago</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr />
+        <div class="row product-list">
+            @foreach (Product item in Model.Item3.Take(6))
+            {
+                <div class="col-md-4" float="left">
+                    <section class="panel">
+                        <div class="pro-img-box">
+                            <img src="@item.ImagePath" alt="" />
+                            @if (Session["admin"] == null)
+                            {
+                                <a href="@Url.Action("AddToCart","Member",new {id=item.ID })" class="adtocart">
+                                    <i class="icon-shopping-cart"></i>
+                                </a>
+                            }
+                        </div>
+
+                        <div class="panel-body text-center">
+                            <h4>
+                                @Html.ActionLink(item.ProductName.Substring(0,15), "ProductDetail", new { category = Url.FriendlyURLTitle(item.Category.CategoryName), Title = Url.FriendlyURLTitle(item.ProductName), id = item.ID }, new { @class = "pro-title" , title = item.ProductName})
+                            </h4>
+                            <p class="price">$@item.UnitPrice</p>
+                        </div>
+                    </section>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<!-- page end-->

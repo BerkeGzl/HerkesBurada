@@ -1,0 +1,56 @@
+﻿@model Cart
+@{
+    ViewBag.Title = "CartPage";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+
+<div>
+    <div class="row product-list">
+        @TempData["message"]
+        @foreach (CartItem item in Model.Sepetim)
+        {
+            <div class="col-md-4">
+                <section class="panel">
+                    <div class="pro-img-box">
+                        <a href="@Url.Action("ProductDetail", new { category = @Url.FriendlyURLTitle(item.CategoryName),Title = Url.FriendlyURLTitle(item.Name),id = item.ID})">
+                            <img src="@item.ImagePath" alt="" />
+                        </a>
+                        @if (Session["admin"] == null)
+                        {
+                            <a href="@Url.Action("AddToCart","Member",new {id=item.ID })" class="adtocart">
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
+
+                    <div class="panel-body text-center">
+                        <h4>
+                            @Html.ActionLink(item.Name, "ProductDetail", new { category = Url.FriendlyURLTitle(item.CategoryName), Title = Url.FriendlyURLTitle(item.Name), id = item.ID }, new { @class = "pro-title" }) x @item.Amount
+                        </h4>
+                        <p class="price">$@item.SubTotal</p>
+                    </div>
+                </section>
+            </div>
+        }
+    </div>
+</div>
+
+@section Kategoriler{
+    @Html.ActionLink("Siparişi onayla", "SiparisiOnayla", null, new { @class = "btn btn-success" }) <br />
+
+    Ödemeniz gereken toplam tutar => @Convert.ToDecimal(Model.TotalPrice).ToString("C2")
+}
+
+<script>
+    $(document).ready(function () {
+        var x = document.getElementById("visibleDiv");
+        var y = document.getElementById("visibleDiv2");
+        if (x.style.display === "none" && y.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "block";
+        } else {
+            x.style.display = "none";
+            y.style.display = "none";
+        }
+    });
+</script>

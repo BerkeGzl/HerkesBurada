@@ -1,0 +1,99 @@
+﻿@model Tuple<IPagedList<Product>, List<Category>>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+<h2 style="color:red" align="center">@TempData["message"]</h2>
+<h2 style="color:forestgreen" align="center">@TempData["satıs"]</h2>
+
+@section Kategoriler{
+    @*<br /> <br /> <br />
+    <input id="txtSearch" type="text" class="form-control" placeholder="Arama Yapınız" /> <br />*@
+    @foreach (Category item in Model.Item2)
+    {
+        <li>@Html.ActionLink(item.CategoryName, "SelectByCategory", "Member", new { id = item.ID }, new { @class = "icon-angle-right" })</li>
+    }
+}
+
+
+<div id="OzelUrunler">
+    <div style="float:right">
+        @Html.PagedListPager(Model.Item1, page => Url.Action("Index", new { page }))
+    </div>
+    <br /> <br /> <br /> <br />
+    <div class="row product-list">
+        @foreach (Product item in Model.Item1)
+        {
+            <div class="col-md-4">
+                <section class="panel">
+                    <div class="pro-img-box">
+                        <a href="@Url.Action("ProductDetail", new { category = @Url.FriendlyURLTitle(item.Category.CategoryName),Title = Url.FriendlyURLTitle(item.ProductName),id = item.ID})">
+                            <img src="@item.ImagePath" alt="" />
+                        </a>
+                        @if (Session["admin"] == null)
+                        {
+                            <a href="@Url.Action("AddToCart","Member",new {id=item.ID })" class="adtocart">
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
+
+                    <div class="panel-body text-center">
+                        <h4>
+                            @Html.ActionLink(item.ProductName, "ProductDetail", new { category = @Url.FriendlyURLTitle(item.Category.CategoryName),Title = Url.FriendlyURLTitle(item.ProductName),id = item.ID}, new { @class="pro-title"})
+                        </h4>
+                        <p class="price">$@item.UnitPrice</p>
+                    </div>
+                </section>
+            </div>
+        }
+
+        <div style="float:right">
+            @Html.PagedListPager(Model.Item1, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#slider-range a").mouseup(function () {
+
+            var spanValue = $("#slider-range-amount").text();
+
+            $.ajax({
+                url: "https://localhost:44367/Member/FiltreliUrunler",
+                type: "Get",
+                data: { item: spanValue },
+                success: function (gelenSayfa) {
+                    $("#OzelUrunler").html(gelenSayfa);
+                }
+            })
+        })
+        var tempkey = $("#txtSearch").val();
+        $("#txtSearch").keyup(function () {
+
+            var keyword = $("#txtSearch").val();
+            $.ajax({
+
+                url: "https://localhost:44367/Member/SearchProducts",
+                type: "Get",
+                data: { keyword: keyword },
+                success: function (donenVeri) {
+                    if (keyword.length === 0 && tempkey != "") {
+
+                        window.location = "";
+                    }
+
+                    else if (keyword != "") {
+                        tempkey = "bosdegil"
+                        $("#OzelUrunler").html(donenVeri);
+                    }
+                    else if (tempkey == "") {
+
+                    }
+                }
+            })
+        })
+    })
+</script>

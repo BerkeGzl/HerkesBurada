@@ -1,0 +1,125 @@
+﻿@model Tuple<IPagedList<Product>, List<Category>>
+@{
+    ViewBag.Title = "SelectByCategory";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+
+<h2 style="color:red">@Model.Item1[0].Category.CategoryName</h2>
+
+
+@section Kategoriler{
+    @*<br /> <br /> <br /> <br /> <br /> <br /><br />*@
+    @foreach (Category item in Model.Item2)
+    {
+        if (item.ID == ViewBag.KategoriID)
+        {
+            <li>@Html.ActionLink(item.CategoryName, "SelectByCategory", "Member", new { id = item.ID }, new { @class = "icon-angle-right", style = "background-color:aquamarine" })</li>
+        }
+        else
+        {
+            <li>@Html.ActionLink(item.CategoryName, "SelectByCategory", "Member", new { id = item.ID }, new { @class = "icon-angle-right" })</li>
+        }
+    }
+}
+<div id="OzelUrunler">
+
+
+    <div style="float:right">
+        @Html.PagedListPager(Model.Item1, page => Url.Action("SelectByCategory", new { page, id = ViewBag.KategoriID }))
+    </div>
+    <br /> <br /> <br /> <br />
+    <div class="row product-list">
+        @foreach (Product item in Model.Item1)
+        {
+            <div class="col-md-4">
+                <section class="panel">
+                    <div class="pro-img-box">
+                        <a href="@Url.Action("ProductDetail", new { category = @Url.FriendlyURLTitle(item.Category.CategoryName),Title = Url.FriendlyURLTitle(item.ProductName),id = item.ID})">
+                            <img src="@item.ImagePath" alt="" />
+                        </a>
+                        @if (Session["admin"] == null)
+                        {
+                            <a href="@Url.Action("AddToCart","Member",new {id=item.ID })" class="adtocart">
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
+
+                    <div class="panel-body text-center">
+                        <h4>
+                            @Html.ActionLink(item.ProductName, "ProductDetail", new { category = Url.FriendlyURLTitle(item.Category.CategoryName), Title = Url.FriendlyURLTitle(item.ProductName), id = item.ID }, new { @class = "pro-title" })
+                        </h4>
+                        <p class="price">$@item.UnitPrice</p>
+                    </div>
+                </section>
+            </div>
+        }
+    </div>
+    <div style="float:right">
+        @Html.PagedListPager(Model.Item1, page => Url.Action("SelectByCategory", new { page, id = ViewBag.KategoriID }))
+    </div> <br /> <br /> <br /> <br /> <br />
+
+
+</div>
+
+
+@*<script>
+    $(function () {
+        $("#slider-range a").mouseup(function () {
+
+            var spanValue = $("#slider-range-amount").text();
+
+            $.ajax({
+                url: "https://localhost:44367/Member/FiltreKeywordUrunleri",
+                type: "Get",
+                data: { fiyat: spanValue,categoryId:@Model.Item1.First().Category.ID },
+                success: function (gelenSayfa) {
+                    $("#OzelUrunler").html(gelenSayfa);
+                }
+            })
+        })
+        $("#txtSearch").keyup(function () {
+            var keyword = $("#txtSearch").val();
+            $.ajax({
+
+                url: "https://localhost:44367/Member/SearchProduct",
+                type: "Get",
+                data: { keyword: keyword },
+                success: function (donenVeri) {
+                    $("#OzelUrunler").html(donenVeri);
+                }
+            })
+        })
+    })
+</script>*@
+
+
+<script>
+    $(function () {
+        $("#slider-range a").mouseup(function () {
+
+            var spanValue = $("#slider-range-amount").text();
+
+            $.ajax({
+                url: "https://localhost:44367/Member/FiltreliUrunler",
+                type: "Get",
+                data: { fiyat: spanValue,categoryId:@Model.Item1.First().Category.ID },
+                success: function (gelenSayfa) {
+                    $("#OzelUrunler").html(gelenSayfa);
+                }
+            })
+        })
+        $("#txtSearch").keyup(function () {
+            var keyword = $("#txtSearch").val();
+            $.ajax({
+
+                url: "https://localhost:44367/Member/SearchProducts",
+                type: "Get",
+                data: { keyword: keyword },
+                success: function (donenVeri) {
+                    $("#OzelUrunler").html(donenVeri);
+                }
+            })
+        })
+    })
+</script>

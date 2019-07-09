@@ -1,0 +1,83 @@
+﻿@model Tuple<AppUser, AppUserDetail>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>Kayıt Sayfası</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/OuterTools/FlatAdmin/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/OuterTools/FlatAdmin/css/bootstrap-reset.css" rel="stylesheet" />
+    <!--external css-->
+    <link href="~/OuterTools/FlatAdmin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="~/OuterTools/FlatAdmin/css/style.css" rel="stylesheet" />
+    <link href="~/OuterTools/FlatAdmin/css/style-responsive.css" rel="stylesheet" />
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <script src="~/Scripts/jquery-1.8.0.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <style>
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+</head>
+
+  <body class="login-body">
+      <div class="container">
+          <h1 style="color:red" align="center">@TempData["uyeDegil"]</h1>
+          <h1 style="color:red" align="center">@ViewBag.ZatenVar</h1>
+          @using (Html.BeginForm("Register", "Home", FormMethod.Post, new { @class = "form-signin" }))
+          {
+              <h2 class="form-signin-heading">Hemen Kaydol</h2>
+              <h3 style="color:forestgreen" align="center">@TempData["HesapAktif"]</h3>
+              <div class="login-wrap">
+                  <p>Kişisel bilgilerinizi aşağıya girin</p>
+                  @Html.ValidationMessageFor(x => x.Item2.FirstName)
+                  @Html.TextBoxFor(x => x.Item2.FirstName, new { @class = "form-control", placeholder = "İsim", autofocus = true })
+                  @Html.ValidationMessageFor(x => x.Item2.LastName)
+                  @Html.TextBoxFor(x => x.Item2.LastName, new { @class = "form-control", placeholder = "Soyisim", autofocus = true })
+                  @Html.TextAreaFor(x => x.Item2.Address, new { @class = "form-control", placeholder = "Adres Giriniz", autofocus = true })
+                  <br />
+                  <p>Hesap bilgilerinizi aşağıya girin</p>
+                  @Html.ValidationMessageFor(x => x.Item1.UserName)
+                  @Html.TextBoxFor(x => x.Item1.UserName, new { @class = "form-control", placeholder = "Kullanıcı İsmi", autofocus = true })
+                  @Html.ValidationMessageFor(x => x.Item1.Email)
+                  @Html.TextBoxFor(x => x.Item1.Email, new { @class = "form-control", placeholder = "Email Giriniz", autofocus = true })
+                  @Html.ValidationMessageFor(x => x.Item1.Password)
+                  @Html.PasswordFor(x => x.Item1.Password, new { @class = "form-control", placeholder = "Şifre", autofocus = true })
+                  @Html.ValidationMessageFor(x => x.Item1.ConfirmPassword)
+                  @Html.PasswordFor(x => x.Item1.ConfirmPassword, new { @class = "form-control", placeholder = "Şifre Tekrar", autofocus = true })
+
+
+                  <button class="btn btn-lg btn-login btn-block" type="submit">Kayıt Ol</button>
+
+                  <div class="registration" align="center">
+                      Zaten Kayıtlı mısın?
+                      <br />
+                      @Html.ActionLink("Giriş Yap", "Login", "Home")
+                  </div>
+
+              </div>
+          }
+      </div>
+  </body>
+</html>
+

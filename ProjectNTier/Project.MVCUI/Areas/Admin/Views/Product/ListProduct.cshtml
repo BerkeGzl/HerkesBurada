@@ -1,0 +1,125 @@
+﻿@model List<Product>
+@{
+    ViewBag.Title = "ListProduct";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<title>Ürün Listesi</title>
+<link href="~/OuterTools/LightBox/lightbox.min.css" rel="stylesheet" />
+<script src="~/OuterTools/LightBox/lightbox-plus-jquery.min.js"></script>
+<!--main content start-->
+@*<section id="main-content">*@
+@*<section class="wrapper">*@
+<!-- page start-->
+<section class="panel">
+    <header class="panel-heading">
+        DataTables hidden row details example
+    </header>
+    <div class="panel-body">
+        <div class="adv-table">
+            <table cellpadding="0" cellspacing="0" border="0" class="display table table-bordered" id="hidden-table-info">
+                <thead>
+                    <tr>
+                        <th>Ürün ID</th>
+                        <th>Ürün İsmi</th>
+                        <th>Ürün Fiyatı</th>
+                        <th>Ürün Resmi</th>
+                        <th class="hidden-phone">Kategorisi</th>
+                        <th class="hidden-phone">Silme</th>
+                        <th class="hidden-phone">Güncelleme</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Product item in Model)
+                    {
+                        <tr class="gradeX">
+                            <td>@item.ID</td>
+                            <td>@item.ProductName</td>
+                            <td class="hidden-phone">@item.UnitPrice</td>
+                            <td align="center">
+                                <a href="@item.ImagePath" class="example-image-link" data-lightbox="example-1">
+                                    <img src="@item.ImagePath" width="100" height="30" />
+                                </a>
+                            </td>
+                            @if (item.Category == null)
+                            {
+                                <td class="hidden-phone">Kategorisi Yok</td>
+                            }
+                            else
+                            {
+                                <td class="hidden-phone">@item.Category.CategoryName</td>
+                            }
+                            <td class="center hidden-phone">@Html.ActionLink("Sil", "DeleteProduct", new { id = item.ID }, new { @class = " btn btn-danger" })</td>
+                            <td class="center hidden-phone">@Html.ActionLink("Güncelle", "UpdateProduct", new { id = item.ID }, new { @class = " btn btn-warning" })</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<!-- page end-->
+@*</section>*@
+@*</section>*@
+<!--main content end-->
+
+<script type="text/javascript">
+    /* Formating function for row details */
+    function fnFormatDetails(oTable, nTr) {
+        var aData = oTable.fnGetData(nTr);
+        var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+        sOut += '<tr><td>Ürün Resmi:</td><td>' + aData[4] + '</td></tr>';
+        sOut += '<tr><td>Ürün Ekle:</td><td> <a href="/admin/urun-ekle" class="btn btn-success">Ürün Ekle </a></td></tr>';
+        sOut += '<tr><td>Ürün Detay:</td><td><a href="/admin/urun-detay/' + aData[1] + ' "class="btn btn-info">Ürün Detayı </a></td></tr>';
+    sOut += '</table>';
+
+    return sOut;
+}
+
+$(document).ready(function () {
+    /*
+     * Insert a 'details' column to the table
+     */
+    var nCloneTh = document.createElement('th');
+    var nCloneTd = document.createElement('td');
+    nCloneTd.innerHTML = '<img src="/OuterTools/FlatAdmin/assets/advanced-datatable/examples/examples_support/details_open.png">';
+    nCloneTd.className = "center";
+
+    $('#hidden-table-info thead tr').each(function () {
+        this.insertBefore(nCloneTh, this.childNodes[0]);
+    });
+
+    $('#hidden-table-info tbody tr').each(function () {
+        this.insertBefore(nCloneTd.cloneNode(true), this.childNodes[0]);
+    });
+
+    /*
+     * Initialse DataTables, with no sorting on the 'details' column
+     */
+    var oTable = $('#hidden-table-info').dataTable({
+        "aoColumnDefs": [
+            { "bSortable": false, "aTargets": [0] }
+        ],
+        "aaSorting": [[1, 'asc']]
+    });
+
+    /* Add event listener for opening and closing details
+     * Note that the indicator for showing which row is open is not controlled by DataTables,
+     * rather it is done here
+     */
+    $('#hidden-table-info tbody td img').live('click', function () {
+        var nTr = $(this).parents('tr')[0];
+        if (oTable.fnIsOpen(nTr)) {
+            /* This row is already open - close it */
+            this.src = "/OuterTools/FlatAdmin/assets/advanced-datatable/examples/examples_support/details_open.png";
+            oTable.fnClose(nTr);
+        }
+        else {
+            /* Open this row */
+            this.src = "/OuterTools/FlatAdmin/assets/advanced-datatable/examples/examples_support/details_close.png";
+            oTable.fnOpen(nTr, fnFormatDetails(oTable, nTr), 'details');
+        }
+    });
+});
+</script>

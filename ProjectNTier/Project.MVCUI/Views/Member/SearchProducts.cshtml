@@ -1,0 +1,82 @@
+﻿@model Tuple<IPagedList<Product>, List<Category>>
+
+
+<h1 style="color:green">@TempData["HesapAktif"]  </h1>
+
+
+@section Kategoriler{
+    @foreach (Category item in Model.Item2)
+    {
+        <li>@Html.ActionLink(item.CategoryName, "SelectByCategory", "Member", new { id = item.ID }, new { @class = "icon-angle-right" })</li>
+    }
+}
+
+
+
+
+<div id="OzelUrunler">
+    <div style="float:right">
+        @Html.PagedListPager(Model.Item1, page => Url.Action("SearchProducts", new { item = ViewBag.Keyword, page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly, new AjaxOptions
+        {
+       InsertionMode = InsertionMode.Replace,
+       HttpMethod = "Get",
+       UpdateTargetId = "OzelUrunler"
+   }))
+    </div>
+    <br /> <br /> <br /> <br />
+
+    <div class="row product-list">
+        @foreach (Product item in Model.Item1)
+        {
+            <div class="col-md-4">
+                <section class="panel">
+                    <div class="pro-img-box">
+                        <a href="@Url.Action("ProductDetail", new { category = @Url.FriendlyURLTitle(item.Category.CategoryName),Title = Url.FriendlyURLTitle(item.ProductName),id = item.ID})">
+                            <img src="@item.ImagePath" alt="" />
+                        </a>
+                        @if (Session["admin"] == null)
+                        {
+                            <a href="@Url.Action("AddToCart","Member",new {id=item.ID })" class="adtocart">
+                                <i class="icon-shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
+
+                    <div class="panel-body text-center">
+                        <h4>
+                            @Html.ActionLink(item.ProductName, "ProductDetail", new { category = Url.FriendlyURLTitle(item.Category.CategoryName), Title = Url.FriendlyURLTitle(item.ProductName), id = item.ID }, new { @class = "pro-title" })
+                        </h4>
+                        <p class="price">$@item.UnitPrice</p>
+                    </div>
+                </section>
+            </div>
+        }
+
+        <div style="float:right">
+            @Html.PagedListPager(Model.Item1, page => Url.Action("SearchProducts", new { item = ViewBag.Keyword, page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly, new AjaxOptions
+            {
+           InsertionMode = InsertionMode.Replace,
+           HttpMethod = "Get",
+           UpdateTargetId = "OzelUrunler"
+       }))
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#slider-range a").mouseup(function () {
+
+            var spanValue = $("#slider-range-amount").text();
+            var keyword = $("#txtSearch").val();
+            $.ajax({
+                url: "https://localhost:44367/Member/FiltreKeywordUrunleri",
+                type: "Get",
+                data: { fiyat: spanValue, keyword: keyword },
+                success: function (gelenSayfa) {
+                    $("#OzelUrunler").html(gelenSayfa);
+                }
+            })
+        })
+    })
+</script>

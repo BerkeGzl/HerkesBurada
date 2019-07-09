@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+    <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+    <link rel="shortcut icon" href="~/OuterTools/FlatAdmin/img/favicon.png">
+    <title>Ürün Listesi</title>
+    <!-- Bootstrap core CSS -->
+    <script src="~/OuterTools/FlatAdmin/js/jquery.js"></script>
+    <link href="~/OuterTools/FlatAdmin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/OuterTools/FlatAdmin/css/bootstrap-reset.css" rel="stylesheet">
+    <!--external css-->
+    <link href="~/OuterTools/FlatAdmin/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/OuterTools/FlatAdmin/assets/jquery-ui/jquery-ui-1.10.1.custom.min.css" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="~/OuterTools/FlatAdmin/assets/advanced-datatable/media/css/demo_page.css" rel="stylesheet" />
+    <link href="~/OuterTools/FlatAdmin/assets/advanced-datatable/media/css/demo_table.css" rel="stylesheet" />
+
+
+    <link href="~/OuterTools/FlatAdmin/css/style.css" rel="stylesheet">
+    <link href="~/OuterTools/FlatAdmin/css/style-responsive.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+      <script src="~/OuterTools/FlatAdmin/js/html5shiv.js"></script>
+      <script src="~/OuterTools/FlatAdmin/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+</head>
+<body>
+    <section id="container" class="">
+        <!--header start-->
+        <header class="header white-bg">
+            <div class="sidebar-toggle-box">
+                <div data-original-title="Toggle Navigation" data-placement="right" class="icon-reorder tooltips"></div>
+            </div>
+            <!--logo start-->
+            <div align="center">
+                <a href="@Url.Action("Index", "Member")" class="logo">Herkes<span>Burada</span></a>
+            </div>
+
+            <!--logo end-->
+
+            <div class="top-nav ">
+                <ul class="nav pull-right top-menu">
+                    <li>
+                        <input type="text" class="form-control search" id="search-box" placeholder="Ürün Ara">
+                    </li>
+                    @if (Session["admin"] != null)
+                    {
+                        @Html.ActionLink("Admin Panel", "ListProduct", new { controller = "Product", area = "Admin" }, new { @class = "btn btn-info" })
+                    }
+                    <!-- user login dropdown start-->
+                    @if (Session["admin"] == null && Session["member"] == null)
+                    {
+                        <li>@Html.ActionLink("Giriş Yap", "Login", "Home", null, new { @class = "btn btn-success" }) </li>
+                        <li>@Html.ActionLink("Kayıt Ol", "Register", "Home", null, new { @class = "btn btn-warning" }) </li>
+                    }
+                    else if (Session["admin"] != null)
+                    {
+
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="username">@((Session["admin"] as AppUser).UserName)</span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu extended logout">
+                                <div class="log-arrow-up"></div>
+                                <li><a href="@Url.Action("AdminProfile",  new { controller="AdminProfile", area="Admin", id=(Session["admin"] as AppUser).ID})"><i class=" icon-suitcase"></i>Profil</a></li>
+                                <li><a href="@Url.Action("UpdateProfile", "AdminProfile", new { controller="AdminProfile", area="Admin", id=(Session["admin"] as AppUser).ID})"><i class="icon-cog"></i> Profili Düzenle</a></li>
+                                <li><a href="@Url.Action("LogOut", "Home")"><i class="icon-key"></i>Çıkış Yap</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else if (Session["member"] != null)
+                    {
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="username">@((Session["member"] as AppUser).UserName)</span>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu extended logout">
+                                <div class="log-arrow-up"></div>
+                                <li><a href="@Url.Action("MemberProfile", "MemberProfile", new { controller="MemberProfile", area="MemberHome", id=(Session["member"] as AppUser).ID})"><i class=" icon-suitcase"></i>Profil</a></li>
+                                <li><a href="@Url.Action("UpdateProfile", "MemberProfile", new { controller="MemberProfile", area="MemberHome", id=(Session["member"] as AppUser).ID})"><i class="icon-cog"></i> Profili Düzenle</a></li>
+                                <li><a href="@Url.Action("CartPage","Member")"><i class=" icon-shopping-cart"></i> Sepet</a></li>
+                                <li><a href="@Url.Action("LogOut", "Home")"><i class="icon-key"></i> Çıkış Yap</a></li>
+                            </ul>
+                        </li>
+                    }
+                    <!-- user login dropdown end -->
+                </ul>
+            </div>
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="icon-shopping-cart"></i>
+                            <span>Market</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="@Url.Action("Index", "Member")">Ürün Listesi</a></li>
+                            @if (Session["member"] != null)
+                            {
+                                <li><a href="@Url.Action("CartPage","Member")">Sepetim</a></li>
+                            }
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Contact","Member")">
+                            <i class="icon-map-marker"></i>
+                            <span>İletişim </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("About","Member")">
+                            <i class="icon-info-sign"></i>
+                            <span>Hakkımızda </span>
+                        </a>
+                    </li>
+                    @*<li>
+                            <a href="login.html">
+                                <i class="icon-user"></i>
+                                <span>Login Page</span>
+                            </a>
+                        </li>*@
+
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">
+                <!-- page start-->
+                <div class="row">
+                    <div class="col-md-3" id="gizle">
+                        <div>
+                            <section class="panel" id="visibleDiv">
+                                <div class="panel-body">
+                                    <input id="txtSearch" type="text" placeholder="Arama yapın" class="form-control">
+                                </div>
+                            </section>
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    Kategoriler
+                                </header>
+                                <div class="panel-body">
+                                    <ul class="nav prod-cat">
+                                        @RenderSection("Kategoriler", false)
+                                    </ul>
+                                </div>
+                            </section>
+                            <section class="panel" id="visibleDiv2">
+                                <header class="panel-heading">
+                                    Fiyat Aralığı
+                                </header>
+                                <div class="panel-body sliders">
+                                    <div id="slider-range" class="slider"></div>
+                                    <div class="slider-info">
+                                        <span id="slider-range-amount"></span>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    En Çok Satanlar
+                                </header>
+                                <div class="panel-body">
+                                    <div class="best-seller">
+                                        <article class="media">
+                                            <a class="pull-left thumb p-thumb">
+                                                <img src="~/OuterTools/FlatAdmin/img/product1.jpg">
+                                            </a>
+                                            <div class="media-body">
+                                                <a href="#" class=" p-head">Item One Tittle</a>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                            </div>
+                                        </article>
+                                        <article class="media">
+                                            <a class="pull-left thumb p-thumb">
+                                                <img src="~/OuterTools/FlatAdmin/img/product2.png">
+                                            </a>
+                                            <div class="media-body">
+                                                <a href="#" class=" p-head">Item Two Tittle</a>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                            </div>
+                                        </article>
+                                        <article class="media">
+                                            <a class="pull-left thumb p-thumb">
+                                                <img src="~/OuterTools/FlatAdmin/img/product3.png">
+                                            </a>
+                                            <div class="media-body">
+                                                <a href="#" class=" p-head">Item Three Tittle</a>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                    </div>
+                    <div class="col-md-9">
+
+                        @RenderBody()
+                    </div>
+                </div>
+                <!-- page end-->
+            </section>
+        </section>
+        <!--main content end-->
+        <!--footer start-->
+        <footer class="site-footer">
+            <div class="text-center">
+                @DateTime.Now.Year &copy; HERKESBURADA.
+                <a href="#" class="go-top">
+                    <i class="icon-angle-up"></i>
+                </a>
+            </div>
+        </footer>
+        <!--footer end-->
+
+    </section>
+    <!-- js placed at the end of the document so the pages load faster -->
+
+    <script src="~/OuterTools/FlatAdmin/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="~/OuterTools/FlatAdmin/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="~/OuterTools/FlatAdmin/js/jquery.scrollTo.min.js"></script>
+    <script src="~/OuterTools/FlatAdmin/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="~/OuterTools/FlatAdmin/assets/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+    <script src="~/OuterTools/FlatAdmin/js/jquery.ui.touch-punch.min.js"></script>
+    <script src="~/OuterTools/FlatAdmin/js/jquery.customSelect.min.js"></script>
+    <script src="~/OuterTools/FlatAdmin/js/respond.min.js"></script>
+
+    <!--common script for all pages-->
+    <script src="~/OuterTools/FlatAdmin/js/common-scripts.js"></script>
+    <script src="~/OuterTools/FlatAdmin/js/sliders.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(function () {
+                $('select.styled').customSelect();
+            });
+        });
+
+
+    </script>
+
+
+
+
+
+
+
+    @*<script>
+            $(function () {
+                $("#search-box").keypress(function (e) {
+                    var keyword = $("#search-box").val();
+                    if (e.keyCode == 13) {
+
+                        $.ajax({
+                            url: "https://localhost:44367/Member/SearchProducts",
+                            type: "Get",
+                            data: { result: keyword },
+                            success: function (donenVeri) {
+                                window.location = "/arama?result=" + keyword
+                            }
+                        })
+                    }
+
+                })
+            })
+        </script>*@
+
+
+    <script>
+            $(function () {
+                var tempkey = $("#search-box").val();
+                $("#search-box").keyup(function () {
+
+                    var keyword = $("#search-box").val();
+                    $.ajax({
+
+                        url: "https://localhost:44367/Member/SearchProducts",
+                        type: "Get",
+                        data: { keyword: keyword },
+                        success: function (donenVeri) {
+                            if (keyword.length === 0 && tempkey != "") {
+
+                                window.location = "";
+                            }
+
+                            else if (keyword != "") {
+                                tempkey = "bosdegil"
+                                $("#OzelUrunler").html(donenVeri);
+                            }
+                            else if (tempkey == "") {
+
+                            }
+                        }
+                    })
+                })
+            })
+        </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+﻿@model Order
+@{
+    ViewBag.Title = "SiparisiOnayla";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+
+<h2 style="color:red">Siparişi Onayla</h2>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var x = document.getElementById("visibleDiv");
+        var y = document.getElementById("visibleDiv2");
+        if (x.style.display === "none" && y.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "block";
+        } else {
+            x.style.display = "none";
+            y.style.display = "none";
+        }
+    });
+</script>
+
+@section Kategoriler{
+    @{
+        decimal toplamTutar = Convert.ToDecimal((Session["scart"] as Cart).TotalPrice);
+    }
+
+    <span style="color:green">Ödemeniz gereken toplam tutar => @toplamTutar</span>
+}
+
+<h1 style="color:red" align="center">@ViewBag.Tarih</h1>
+@using (Html.BeginForm("SiparisiOnayla", "Member", FormMethod.Post))
+{
+    <div>Adres Giriniz</div>
+    <div>@Html.TextBoxFor(x => x.ShippedAddress)</div>
+    <div>Tarihi Seçin</div>
+    <div>@Html.TextBoxFor(x => x.RequiredDate, new { type="date" })</div> @Html.ValidationMessageFor(x => x.RequiredDate)
+    @*<div>@Html.TextBoxFor(x => x.RequiredDate, new { @class="datepicker" })</div>*@
+    <div>
+        <button class="btn btn-primary">Sipariş Ver</button>
+    </div>
+}
+
+<script>
+    $(".date-picker").datepicker({ dateFormat: "dd-mm-yy" });
+</script>

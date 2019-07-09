@@ -1,0 +1,112 @@
+﻿@model Tuple<AppUser,AppUserDetail>
+@{
+    ViewBag.Title = "UpdateAppUser";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Kullanıcı Güncelleme</title>
+</head>
+
+<!-- page start-->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading">
+                Kullanıcı Güncelleme    
+            </header>
+            <div class="panel-body">
+                <div class="form">
+                    @if (ViewBag.Kayitli != null)
+                    {
+                        <h1 style="color:red">@ViewBag.Kayitli</h1>
+                    }
+
+                    @if (ViewBag.NotActive != null)
+                    {
+                        <h1 style="color:red">@ViewBag.NotActive</h1>
+                    }
+                    @using (Html.BeginForm("UpdateAppUser", "AppUser", FormMethod.Post, new { @class = "cmxform form-horizontal tasi-form" }))
+                    {
+                        @Html.HiddenFor(x => x.Item1.ID)
+                        @Html.HiddenFor(x => x.Item2.ID)
+                        @Html.HiddenFor(x => x.Item1.Password)
+                        @Html.ActionLink("Şifresini Değiştir", "UpdateAppUserPassword", "AppUser", new { id = Model.Item1.ID }, new { @class = "btn btn-success" })<hr />
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">Kullanıcı Rolü:</label>
+                            <div class="col-lg-10">
+                                @Html.EnumDropDownListFor(x => x.Item1.UserRole, "Lütfen Seçim Yapınız", new { @class = "btn btn-white dropdown-toggle", style = "height:35px;width:200px" })
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">Aktif Mi?:</label>
+                            <div class="col-lg-1">
+                                @Html.CheckBoxFor(x => x.Item1.IsActive, new { @class = "checkbox form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">İsim:</label>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(x => x.Item2.FirstName, new { @class = "form-control", style = "height:25px;width:200px" })
+                                @Html.ValidationMessageFor(x => x.Item2.FirstName)
+                            </div>
+                        </div>
+
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">Soyad:</label>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(x => x.Item2.LastName, new { @class = "form-control", style = "height:25px;width:200px" })
+                                @Html.ValidationMessageFor(x => x.Item2.LastName)
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">Cinsiyet:</label>
+                            <div class="col-lg-10">
+                                @Html.EnumDropDownListFor(x => x.Item2.Gender, "Lütfen Seçim Yapınız", new { @class = "btn btn-white dropdown-toggle", style = "height:35px;width:200px" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">Kullanıcı Adı:</label>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(x => x.Item1.UserName, new { @class = "form-control", style = "height:25px;width:200px" })
+                                @Html.ValidationMessageFor(x => x.Item1.UserName)
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">E-Posta:</label>
+                            <div class="col-lg-10">
+                                @Html.TextBoxFor(x => x.Item1.Email, new { @class = "form-control", style = "height:25px;width:200px" })
+                                @Html.ValidationMessageFor(x => x.Item1.Email)
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <label for="lastname" class="control-label col-lg-2">Hakkında:</label>
+                            <div class="col-lg-10">
+                                @Html.TextAreaFor(x => x.Item2.Address, new { style = "height:25px;width:200px", placeholder = "Hakkında Bir şeyler Yaz" })
+                                @Html.ValidationMessageFor(x => x.Item2.Address)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-danger" type="submit">Güncelle</button>
+                                @Html.ActionLink("İptal Et", "ListAppUser", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- page end-->
